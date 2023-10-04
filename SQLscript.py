@@ -10,6 +10,7 @@ def create_insert_Database():
 		db_host = os.environ.get('MYSQL_HOST')
 		db_password = os.environ.get('MYSQL_PASSWORD')
 		db_name = os.environ.get('MYSQL_DATABASE')
+		db_nameBackUp = os.environ.get('MYSQL_DATABASE_BACKUP')
 		
 		#Connection to SQL
 		#engine = create_engine(f'mysql+pymysql://{db_user}:{db_password}@db/{db_name}')
@@ -80,6 +81,20 @@ def create_insert_Database():
 		cursor.execute(insert_sample_data_muscle)
 		cursor.execute(insert_sample_data_mapping)
 		
+		connection.commit()
+		cursor.close()
+
+		cursor = connection.cursor()
+
+		cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_nameBackUp};")
+		cursor.execute(f"USE {db_nameBackUp};")
+		cursor.execute(create_body_table)
+		cursor.execute(create_muscle_table)
+		cursor.execute(create_muscle_mapping_table)
+
+		cursor.execute(f"INSERT INTO Body (Name) SELECT Name FROM {db_name}.Body;")
+		cursor.execute(f"INSERT INTO Muscle (Name, Description) SELECT Name, Description FROM {db_name}.Muscle;")
+		cursor.execute(f"INSERT INTO MuscleMapping (BodyID, MuscleID) SELECT BodyID, MuscleID FROM {db_name}.MuscleMapping;")
 		connection.commit()
 		cursor.close()
 		
