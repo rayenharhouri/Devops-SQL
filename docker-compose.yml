@@ -1,0 +1,44 @@
+version: '3'
+
+networks:
+  mynetwork:
+    driver: bridge
+
+services:
+  db:
+    image: mysql:5.7
+    networks:
+      - mynetwork
+    volumes:
+      - SQL:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  SQlcron:
+    image: mysql:latest
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - mynetwork
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8082:80"
+    depends_on:
+      - db
+    networks:
+      - mynetwork
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+
+volumes:
+  SQL: {}
