@@ -9,15 +9,22 @@ def create_insert_Database():
 		db_user = os.environ.get('MYSQL_USER')
 		db_host = os.environ.get('MYSQL_HOST')
 		db_password = os.environ.get('MYSQL_PASSWORD')
+		db_name = os.environ.get('MYSQL_DATABASE')
 		
 		#Connection to SQL
+		#engine = create_engine(f'mysql+pymysql://{db_user}:{db_password}@db/{db_name}')
+
 		connection = pymysql.connect(
-			host = db_host,
-			user = db_user,
-			passwd = db_password
-		)				
+            host=db_host,
+            user=db_user,
+            passwd=db_password
+        )
+	
 		
 		cursor = connection.cursor()
+
+		cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name};")
+		cursor.execute(f"USE {db_name};")
 		
 		# Create dataBase
 		create_body_table = """
@@ -65,6 +72,7 @@ def create_insert_Database():
     		(3, 3); -- Core includes Abdominals
 		"""
 		
+
 		cursor.execute(create_body_table)
 		cursor.execute(create_muscle_table)
 		cursor.execute(create_muscle_mapping_table)
@@ -72,14 +80,14 @@ def create_insert_Database():
 		cursor.execute(insert_sample_data_muscle)
 		cursor.execute(insert_sample_data_mapping)
 		
-		cursor.commit()
+		connection.commit()
 		cursor.close()
 		
 	except Exeption as e:
 		print("FAILED TO CREATE DATABASE", e)
 
 if __name__ == "__main__":
-	create_insert_database()
+	create_insert_Database()
 	
 		
 		

@@ -13,9 +13,10 @@ services:
       - SQL:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: humanBody
 
-  SQlcron:
-    image: mysql:latest
+  sqlcron:
+    image: rinodev/sqlcron:v1.0.0
     ports:
       - "8000:8000"
     depends_on:
@@ -26,6 +27,8 @@ services:
       MYSQL_HOST: db
       MYSQL_USER: root
       MYSQL_PASSWORD: root
+      MYSQL_DATABASE: humanBody
+
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
