@@ -25,7 +25,7 @@ def create_insert_Database():
 
 		cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name};")
 		cursor.execute(f"USE {db_name};")
-		
+
 		# Create dataBase
 		create_body_table = """
 		CREATE TABLE IF NOT EXISTS Body (
@@ -83,7 +83,7 @@ def create_insert_Database():
 		connection.commit()
 		cursor.close()
 		
-	except Exeption as e:
+	except Exception as e:
 		print("FAILED TO CREATE DATABASE", e)
 
 if __name__ == "__main__":
